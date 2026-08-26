@@ -55,4 +55,4 @@ Backup & restore kit untuk setup [opencode](https://opencode.ai) saya — charte
 
 ## Lisensi
 
-**Read-Only Reference License** — lihat [LICENSE](LICENSE). Intinya: bebas dilihat & dipelajari sebagai referensi; **dilarang fork-dikembangkan ulang, modifikasi, redistribusi, atau penggunaan komersial**. Komponen pihak ketiga (cybersecurity pack: Apache 2.0; folder `agents/`: community pack) tetap mengikuti lisensi aslinya.
+**CC BY-NC-ND 4.0** — lihat [LICENSE](LICENSE). Intinya: bebas dilihat, dibagikan verbatim, dan dipelajari sebagai referensi non-komersial **dengan atribusi**; dilarang modifikasi/karya turunan. Komponen pihak ketiga (cybersecurity pack: Apache 2.0; folder `agents/`: community pack) tetap mengikuti lisensi aslinya.
