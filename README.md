@@ -10,6 +10,7 @@ Backup & restore kit untuk setup [opencode](https://opencode.ai) saya — charte
 ├── instructions/        # aturan always-on (INSTRUCTIONS, BROWSER-TOOLS, PUTERJS, NO-SLOP)
 ├── commands/            # slash commands (/plan, /tdd, /verify, ...)
 ├── prompts/             # prompt template subagent (planner, reviewer, dll)
+├── agents/              # ~232 subagent definition project-level (.md, community pack)
 ├── skills/              # skill kurasi (tdd-workflow, security-review, graphify, no-ai-slop, ...)
 ├── skills-custom/ctf/   # 8 skill CTF Miscellaneous custom (MIT) — taruh ke folder cybersecurity pack
 └── docs/cybersecurity-catalog.md  # katalog 188 skill cybersecurity + workflow per kategori
@@ -54,4 +55,4 @@ Backup & restore kit untuk setup [opencode](https://opencode.ai) saya — charte
 
 ## Lisensi
 
-Config & tulisan pribadi — bebas dipakai sebagai referensi. Skill pihak ketiga mengikuti lisensi masing-masing (cybersecurity pack: Apache 2.0; ctf-* custom: MIT).
+Config & tulisan pribadi — bebas dipakai sebagai referensi. Skill pihak ketiga mengikuti lisensi masing-masing (cybersecurity pack: Apache 2.0; ctf-* custom: MIT). Folder `agents/` adalah community pack — restore dengan menyalinnya ke `.opencode/agents/` di project kamu.
