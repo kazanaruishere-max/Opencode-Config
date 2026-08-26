@@ -55,4 +55,4 @@ Backup & restore kit untuk setup [opencode](https://opencode.ai) saya — charte
 
 ## Lisensi
 
-Config & tulisan pribadi — bebas dipakai sebagai referensi. Skill pihak ketiga mengikuti lisensi masing-masing (cybersecurity pack: Apache 2.0; ctf-* custom: MIT). Folder `agents/` adalah community pack — restore dengan menyalinnya ke `.opencode/agents/` di project kamu.
+**Read-Only Reference License** — lihat [LICENSE](LICENSE). Intinya: bebas dilihat & dipelajari sebagai referensi; **dilarang fork-dikembangkan ulang, modifikasi, redistribusi, atau penggunaan komersial**. Komponen pihak ketiga (cybersecurity pack: Apache 2.0; folder `agents/`: community pack) tetap mengikuti lisensi aslinya.

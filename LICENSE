@@ -1,0 +1,38 @@
+# LICENSE — Read-Only Reference License
+
+Copyright (c) 2026 kazanaruishere-max. **All rights reserved.**
+
+Repositori ini disediakan sebagai **REFERENSI TERBUKA (open reference)** — kamu boleh MELIHAT dan mempelajari seluruh isi untuk tujuan edukasi dan inspirasi.
+
+## DIIZINKAN
+
+1. Melihat, membaca, dan mempelajari isi repositori ini.
+2. Meng-clone ke mesin pribadi semata-mata untuk **backup/referensi pribadi**.
+3. Mengutip potongan kecil (fair use) dengan atribusi + link balik ke repositori ini.
+
+## DILARANG
+
+1. **Fork untuk dikembangkan ulang** atau membuat karya turunan/derivatif apa pun.
+2. **Memodifikasi** dan menerbitkan kembali konten ini dalam bentuk apa pun.
+3. **Redistribusi** — menyebarluaskan ulang keseluruhan atau sebagian besar isi (termasuk mirror, re-upload, kompilasi).
+4. **Penggunaan komersial** atas keseluruhan atau sebagian besar isi.
+5. Mengklaim kepemilikan atau menghapus atribusi/copyright.
+
+## KOMPONEN PIHAK KETIGA (tidak termasuk lisensi di atas)
+
+Komponen berikut tetap mengikuti lisensi aslinya dan TIDAK dapat dilisensikan ulang oleh pemilik repo:
+
+| Konten | Sumber | Lisensi |
+|---|---|---|
+| Cybersecurity skills pack (180 skill) | github.com/mukul975/Anthropic-Cybersecurity-Skills | Apache-2.0 |
+| Folder `agents/` (~232 subagent) | Community pack | Lisensi masing-masing sumber |
+| Skill kurasi lainnya bila bersumber eksternal | Sesuai repo asal | Lisensi masing-masing |
+
+Karya asli milik pemilik repo (AGENTS.md, instructions/, docs/, skills-custom/ctf/*, README) tunduk penuh pada lisensi ini.
+
+## CATATAN
+
+- Tombol fork GitHub tetap tersedia secara teknis (ketentuan layanan GitHub); fork mekanis demikian TIDAK memberikan hak penggunaan di luar ketentuan layanan GitHub, dan tetap terikat larangan pada dokumen ini.
+- Untuk izin di luar ketentuan ini (modifikasi, redistribusi, komersial), hubungi pemilik repo.
+
+SPDX-License-Identifier: LicenseRef-ReadOnly-Reference
