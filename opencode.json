@@ -6,6 +6,7 @@
   "agent": {
     "plan": {
       "description": "Software architecture & implementation planning with system design support",
+      "color": "#AF52DE",
       "mode": "primary",
       "model": "9router/fastcode",
       "permission": {
@@ -25,6 +26,7 @@
     },
     "build": {
       "description": "Primary coding agent for development work",
+      "color": "#34C759",
       "mode": "primary",
       "model": "9router/deepreasoning",
       "tools": {
@@ -337,6 +339,27 @@
       "description": "Fast explorer subagent for codebase exploration",
       "mode": "subagent",
       "model": "9router/fastcode"
+    },
+    "ctf": {
+      "description": "CTF all-rounder — classify, pick one skill from ~/.agents/skills/cybersecurity/, generate Kali-ready command (flag hunter)",
+      "color": "#FF3B30",
+      "mode": "primary",
+      "model": "9router/deepreasoning",
+      "prompt": "{file:prompts/agents/ctf.txt}"
+    },
+    "pentest": {
+      "description": "Pentest operator — Recon→Enum→Exploit→Verify→Report (scoped, authorized). Uses cybersecurity skills on-demand.",
+      "color": "#FF9500",
+      "mode": "primary",
+      "model": "9router/deepreasoning",
+      "prompt": "{file:prompts/agents/pentest.txt}"
+    },
+    "researcher": {
+      "description": "Security researcher — deep analysis, read-only, cites sources. No live exploitation without explicit user go.",
+      "color": "#5AC8FA",
+      "mode": "primary",
+      "model": "9router/deepreasoning",
+      "prompt": "{file:prompts/agents/researcher.txt}"
     }
   },
   "instructions": [
