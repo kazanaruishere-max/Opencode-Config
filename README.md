@@ -60,14 +60,18 @@ Lihat **[docs/setup-wsl-kali.md](docs/setup-wsl-kali.md)** — panduan 1-copy un
 |---|---|
 | `context7` | Dokumentasi library/framework up-to-date (remote, streamable HTTP `https://mcp.context7.com/mcp`) |
 | `camofox-browser` | Browser anti-detect untuk scraping/web berbot-detection |
-| `graphify` | Knowledge graph codebase berbasis AST (`graphify-out/graph.json`) |
-| `playwright` | E2E testing & browser automation |
+| `codegraph` | Code knowledge graph pre-index (Rust kernel, auto-sync watcher, `codegraph serve --mcp`) — pengganti graphify |
 | `github` | GitHub API (PR, issue, repo) |
 | `memory` | Knowledge graph memori jangka panjang |
 | `filesystem` | Akses file terbatas direktori proyek |
-| `chrome-devtools` | Debug browser via CDP |
-| `framer` | Integrasi desain Framer |
-| `tradingview` | Hook TradingView via Chrome debug port |
+| `headroom` | Kompresi/ringkas konteks (`headroom.EXE mcp serve`) |
+
+> Dihapus: `graphify` + `serena` (diganti `codegraph`), `framer`, `tradingview` (niche, jarang dipakai), `playwright` + `chrome-devtools` (overlap browser — cukup `camofox-browser`).
+>
+> Reinstall `serena` bila butuh edit/navigasi live via LSP (1 blok JSON di `mcp`):
+> ```json
+> "serena": { "type": "local", "command": ["uvx", "--from", "serena-agent", "serena", "start-mcp-server", "--project-from-cwd", "--context", "agent", "--open-web-dashboard", "False"], "enabled": true }
+> ```
 
 > Catatan Windows: command local MCP pakai `npx.cmd` (bukan `npx`) — spawn `.cmd` langsung sering menyebabkan `Operation timed out after 30000ms`.
 
