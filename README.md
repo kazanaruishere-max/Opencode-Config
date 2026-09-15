@@ -47,12 +47,38 @@ Lihat **[docs/setup-wsl-kali.md](docs/setup-wsl-kali.md)** — panduan 1-copy un
 
 ## Providers yang saya pakai
 
+> Config repo ini **strip `provider` by design** (tanpa secret). Clone mentah → `no active credentials for provider: openai`. Fix: tambah blok `provider` di bawah ke `opencode.json` kamu (copy-paste, key via `{env:}`):
+
+```jsonc
+// opencode.json — tambah di root, sejajar "model" / "agent"
+"provider": {
+  "9router": {
+    "npm": "@ai-sdk/openai-compatible",
+    "options": {
+      "baseURL": "http://127.0.0.1:20128/v1",
+      "apiKey": "{env:OPENCODE_9ROUTER_KEY}"
+    },
+    "models": {
+      "deepreasoning": { "name": "deepreasoning" },
+      "fastcode": { "name": "fastcode" }
+    }
+  }
+}
+```
+Set env sebelum start: `OPENCODE_9ROUTER_KEY=sk-...` (Windows: `[Environment]::SetEnvironmentVariable("OPENCODE_9ROUTER_KEY","sk-...","User")` lalu restart terminal). Atau ganti `"{env:OPENCODE_9ROUTER_KEY}"` jadi `"sk-..."` langsung (tidak untuk repo publik).
+
 | Provider | Keterangan |
 |---|---|
-| `9router` | Proxy lokal OpenAI-compatible di `http://127.0.0.1:20128/v1` — router multi-model (pool alias: `deepreasoning`, `fastcode`, `slow`, `plan`, dll). Semua role agent mereferensikan alias ini. |
-| `nvidia-nim` | NVIDIA NIM API (`integrate.api.nvidia.com`) — model GLM 5.2. |
+| `9router` | Proxy lokal OpenAI-compatible di `http://127.0.0.1:20128/v1` — router multi-model (pool alias: `deepreasoning`, `fastcode`, `slow`, `plan`, dll). **Semua `agent.*.model` = `9router/...` — id harus persis `9router`.** |
+| `nvidia-nim` | NVIDIA NIM API (`integrate.api.nvidia.com`) — model GLM 5.2. Opsional. |
 
-> API key **tidak disertakan** dan tidak perlu sama dengan punyaku — daftarkan providermu sendiri via opencode (`/connect` atau blok `provider` di `opencode.json` dengan `options.apiKey` / `{env:VAR}`). Yang penting: config ini mengharapkan ada provider dengan ID `9router` yang menyediakan alias model di atas.
+> Jangan pakai `/connect` → OpenAI untuk ini — itu bikin `provider: openai` + `baseURL https://api.openai.com/v1` (salah). Yang benar: `npm` wajib `@ai-sdk/openai-compatible`, `baseURL` harus `http://127.0.0.1:20128/v1`.
+
+### Troubleshooting: `no active credentials for provider: openai`
+
+**Penyebab:** `opencode.json` hasil clone tidak punya `provider.9router` (strip by design), tapi `model: "9router/deepreasoning"` tetap minta provider `9router`. Opencode fallback ke `openai` → error itu.
+
+Checklist: (1) `provider` ada & id persis `9router` (bukan `openai`), (2) `npm` = `@ai-sdk/openai-compatible` & `baseURL` = `http://127.0.0.1:20128/v1` (bukan `api.openai.com`), (3) `apiKey` terisi (`{env:OPENCODE_9ROUTER_KEY}` + env set), (4) cek `opencode mcp list` + `curl http://127.0.0.1:20128/v1/models` → 200.
 
 ## MCP servers yang saya pakai
 
