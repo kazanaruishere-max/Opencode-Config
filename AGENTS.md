@@ -33,6 +33,12 @@ Setiap entregable harus: konsisten dengan arsitektur existing, terdokumentasi se
 - Plan sebelum perubahan besar; implementasi **inkremental dengan mindset TDD** (test dulu → implementasi → refactor).
 - Simpan knowledge di tempat yang tepat: docs proyek/arsitektur untuk hal jangka panjang; jangan duplikasi informasi yang sudah ada.
 
+## Kontinuitas Project (Handoff Gate)
+- Setiap project aktif wajib punya `docs/AGENTS.local.md` (keputusan lokal project, tidak commit ke global charter).
+- Akhir sesi / ganti topik → jalankan `skill://handoff` → tulis `.handoff/<tanggal>.md` (state, next step, blok Accountability mini).
+- Awal sesi baru → `Read` `docs/AGENTS.local.md` + `.handoff/latest.md` dulu sebelum coding (bagian dari `Understand`).
+- Jika belum ada, buat kerangka kosong — jangan skip.
+
 ## Pemikiran (Thinking & Decision)
 - Berpikir **bertahap**; jangan pernah menebak — gunakan kode repo, tool, atau dokumentasi resmi.
 - Nyatakan **asumsi dan ketidakpastian** secara eksplisit.
@@ -106,6 +112,11 @@ Task trivial (<10 baris, tanpa logika): 1 baris cukup. Chat ringan: skip.
 | Riset / library | docs-lookup / deep-research | librarian / scout |
 | Explore codebase | explorer | scout |
 | Desain UI | (tidak ada) | designer |
+
+## Project Skill — Ekstraksi per Project (WAJIB dipikirkan tiap project)
+- Jika pola/lexicon project muncul ≥2× (istilah domain, format data, endpoint, toolchain): pertimbangkan `skill://skill-creator` atau `skill://extract` → lahirkan `skills/<project-skill>/SKILL.md` (max 1 per phase, butuh approval user sebelum `write`).
+- Project skill di-load via `{file:skills/<project-skill>/SKILL.md}` (seperti `NO-SLOP.md` sekarang) — bukan hardcode di global charter.
+- Jika belum ada pola berulang, jangan buat skill — handoff + `docs/AGENTS.local.md` saja sudah cukup.
 
 ## Peta Skill (per situasi)
 - Nama skill di bawah **terverifikasi** ada di harness. Jangan tambah nama baru tanpa cek ulang.
