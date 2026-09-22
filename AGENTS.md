@@ -96,6 +96,25 @@ Task trivial (<10 baris, tanpa logika): 1 baris cukup. Chat ringan: skip.
 - Bedakan tipe deteksi: signature bernama = perlakukan sebagai ancaman nyata sampai terbukti sebaliknya; `.AiMl`/heuristic = analisis pola vs isi (pola `irm|iex` sering false positive — baca script aslinya sebelum menyimpulkan), lalu laporkan ke user sebelum jalur alternatif.
 - False positive pada tool bereputasi → **wajib file issue ke upstream** (sertakan nama deteksi + cmdline terdampak).
 
+## Strategi Git & Kolaborasi — Kondisional (WAJIB evaluasi tiap task)
+Tentukan mode dulu:
+- **TEAM** jika salah satu benar: `git remote -v` menunjuk org/shared, branch protection aktif, `CODEOWNERS` ada, atau user menyebut "team"/"PR"/"review" → TEAM.
+- Selain itu → **SOLO**.
+
+| Kondisi | Aksi |
+|---|---|
+| **A. SOLO + ≤3 file & non-breaking** (docs/chore/sync AGENTS.md, fix typo) | Direct commit ke `main` — push hanya bila user bilang `commit`/`push`/`sync`. Tetap Blok Accountability. |
+| **B. SOLO + >3 file / breaking / butuh review** | Branch `type/short-slug` dari `main` terbaru → commit → PR (ringkasan, test, risiko, log) → squash merge setelah review + CI hijau. |
+| **C. Hotfix/rollback (SOLO maupun TEAM)** | Branch `hotfix/<slug>` → PR label `hotfix` → fast-track 1 reviewer + tag → merge. |
+| **D. Spike/POC/experiment** | Branch `exp/<slug>` tanpa PR; boleh force-push personal; merge hanya bila dipromosikan ke B/TEAM. |
+
+Aturan keras:
+- Jangan commit tanpa diminta (A: perlu kata `commit`/`push`; B/C/D: via branch+PR).
+- Jangan force-push branch shared — hanya `exp/*` personal boleh.
+- Jangan merge tanpa PR — default **squash**; `rebase` hanya bila user minta history linear.
+- Tiap PR wajib lulus Verification Gate (build/lint/test) sebelum merge.
+- Mirror rule tetap: `Opencode-Config/AGENTS.md` ikut push di commit yang sama.
+
 ## Peta Kapabilitas Delegasi
 - Semua nama di tabel ini **terverifikasi** ada di config harness aktual. Jangan tambah nama baru tanpa grep ulang ke config.
 - Tiap harness pakai kolomnya sendiri: opencode pakai kolom kiri, omp pakai kolom kanan.
@@ -204,6 +223,5 @@ Skill dipanggil on-demand via `skill://<nama>` (lihat docs); opencode auto-selec
 
 Ringkasan: Cryptography 13, Web 42, Reverse 17, Forensics 33, PWN 7, OSINT 22, Network 12, Miscellaneous (CTF) 8, AI 14, AD/PrivEsc 10, Exploit FW 3, Other/Unclassified 7 = 188.
 Full catalog + deskripsi + workflow per kategori: `docs/cybersecurity-catalog.md` (on-demand). Alternatif cepat: `ls ~/.agents/skills/cybersecurity/`.
-Full catalog + deskripsi: `docs/cybersecurity-catalog.md` (on-demand). Alternatif cepat: `ls ~/.agents/skills/cybersecurity/`.
 Batasan: CTF/lab resmi saja (authorized); operasi destruktif = Tier 0 — wajib approval.
 <!-- Updated: 2026-08-21 compacted; detail → docs/cybersecurity-catalog.md -->
