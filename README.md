@@ -84,15 +84,15 @@ Checklist: (1) `provider` ada & id persis `9router` (bukan `openai`), (2) `npm` 
 
 | MCP | Fungsi |
 |---|---|
-| `context7` | Dokumentasi library/framework up-to-date (remote, streamable HTTP `https://mcp.context7.com/mcp`) |
-| `camofox-browser` | Browser anti-detect untuk scraping/web berbot-detection |
-| `codegraph` | Code knowledge graph pre-index (Rust kernel, auto-sync watcher, `codegraph serve --mcp`) — pengganti graphify |
-| `github` | GitHub API (PR, issue, repo) |
-| `memory` | Knowledge graph memori jangka panjang |
-| `filesystem` | Akses file terbatas direktori proyek |
-| `headroom` | Kompresi/ringkas konteks (`headroom.EXE mcp serve`) |
+| `context7` | Dokumentasi library/framework up-to-date (remote, streamable HTTP `https://mcp.context7.com/mcp`) — **ON** |
+| `codegraph` | Code knowledge graph pre-index (Rust kernel, auto-sync watcher, `codegraph serve --mcp`) — pengganti graphify — **ON** |
+| `filesystem` | Akses file terbatas direktori proyek — **ON** |
+| `headroom` | Kompresi/ringkas konteks (`headroom.EXE mcp serve`) — **ON**, `headroom compress` tiap 25-30 turn |
+| `camofox-browser` | Browser anti-detect untuk scraping/web berbot-detection — **OFF default, ON manual** (`enabled:false`) |
+| `github` | GitHub API (PR, issue, repo) — **OFF default** (hemat token, docs warning "adds a lot") |
+| `memory` | Knowledge graph memori jangka panjang — **OFF default** |
 
-> Dihapus: `graphify` + `serena` (diganti `codegraph`), `framer`, `tradingview` (niche, jarang dipakai), `playwright` + `chrome-devtools` (overlap browser — cukup `camofox-browser`).
+> Default hemat: 4 ON + 3 OFF. ON manual: ubah `enabled:false`→`true` + restart opencode. Dihapus: `graphify` + `serena` (diganti `codegraph`), `framer`, `tradingview` (niche), `playwright` + `chrome-devtools` (overlap — cukup `camofox-browser`).
 >
 > Reinstall `serena` bila butuh edit/navigasi live via LSP (1 blok JSON di `mcp`):
 > ```json

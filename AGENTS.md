@@ -210,6 +210,7 @@ Aturan:
 - MCP `codegraph serve --mcp` melayani project aktif (cwd) — pastikan sesi berjalan di root project yang sudah di-init.
 - Kalau hasil terlihat basi (baru edit, belum sync): `Read` file langsung, atau `codegraph sync` manual bila watcher mati.
 - Telemetri mati (`codegraph telemetry off`, 1.6.0 via `npm i -g @colbymchenry/codegraph`); jangan nyalakan ulang.
+- Hemat context: `headroom compress` tiap 25-30 turn / sebelum `codegraph_explore` besar (lawan residual +80% di sesi panjang).
 
 ## CTF Cybersecurity Skills (Anthropic-Cybersecurity-Skills)
 
