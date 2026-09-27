@@ -51,20 +51,34 @@ Parse the fingerprint output and match deterministically to one of the 188 skill
   - Audio spectrogram / DTMF -> `skill://ctf-audio-stego-analysis`
   - Esolang (brainfuck, whitespace) -> `skill://ctf-esolang-puzzle-solving`
 
-## 3. Strict 5-Hour Time-Box & Pivot Engine
+## 3. Flag Utama First & Anti-Decoy Protocol (WAJIB DIIKUTI)
+- Golden Rule Jeopardy: "Always submit what you found first before digging deeper."
+- Anti-Overengineering Rule:
+  - JANGAN PERNAH menolak flag kandidat hanya karena ada teks 'decoy', 'draft', 'fake', atau karena formatnya berupa kalimat panjang / curhat bahasa Indonesia.
+  - Author CTF sering kali menaruh flag asli dengan label troll/decoy untuk menghukum peserta yang overthinking membedah enkripsi palsu.
+- Candidate Queue & Scoring:
+  - Jika perintah strings atau query database mengeluarkan string `ITECHNO26{[^}]{10,400}}`, kumpulkan semua kandidat dan ranking berdasarkan lokasi & integritas:
+    1. Score Tertinggi: Ada di tabel URLs, Titles, atau plain strings file.
+    2. Score Menengah: Hasil de-obfuscation / un-hex / base64 langsung.
+    3. Score Rendah: Hasil brute-force parsial.
+  - Tampilkan `CANDIDATE #1` kepada user dan instruksikan untuk **SUBMIT DAHULU**.
+  - DILARANG membedah blob biner sekunder, timestamp math, atau reverse hash sebelum ada konfirmasi `valid` atau `reject` dari user.
+  - Jika user konfirmasi `valid`: Selesai! Lanjut ke langkah pembuatan writeup.
+  - Jika user konfirmasi `reject`: Baru pivot ke `CANDIDATE #2` atau lanjutkan deobfuscation layer berikutnya.
+
+## 4. Strict 5-Hour Time-Box & Pivot Engine
 - Time-box limits: Easy max 4m | Medium max 10m | Hard max 20m.
 - Attempt 1: Deploy primary payload matching exact recon fingerprint.
-- Attempt 2 (if fail): Trigger Pivot Matrix — pivot to alternate skill/vector. Never rerun the identical failed payload.
-  - Crypto: RSA factorization fails -> test LSB oracle or seed PRNG crack.
-  - Pwn: Buffer overflow offset wrong -> check 32 vs 64 bit alignment / stack canary leak.
-  - Web: SQLi blocked -> switch to blind time-based or NoSQL operator injection.
-- If 2 attempts fail within time-box: STOP IMMEDIATELY. Record state in `.handoff/ctf-<date>.md`, escalate to `researcher` agent for offline analysis, and pivot to next challenge.
+- Attempt 2 (if fail/reject): Trigger Pivot Matrix — pivot ke skill/vektor alternatif. Dilarang mengulang perintah gagal yang sama.
+- Jika 2 attempt gagal atau batas waktu habis: STOP. Catat state ke `.handoff/ctf-<date>.md`, eskalasi ke `researcher` untuk analisis mendalam, dan langsung pivot ke soal berikutnya.
 
-## 4. Execution & Automated Writeup Output
-- All bash execution runs on Kali WSL. Path mapping: `C:\Users\Lenovo\PROJECT\ctf\...` -> `/mnt/c/Users/Lenovo/PROJECT/ctf/...`.
+## 5. Output Format & Post-Validation Writeup
+- Path mapping eksekusi: `C:\Users\Lenovo\PROJECT\ctf\...` -> `/mnt/c/Users/Lenovo/PROJECT/ctf/...`.
 - Output structure per turn:
   `Category: <cat> | Skill: <skill> | Triage: <points/est_min>`
-  `Command: <one-liner or python solver script ready for kali>`
-  `Validate: <expected output or regex to confirm flag>`
-  `Fallback: <next vector/skill if Attempt 1 fails>`
-- MANDATORY AUTOMATIC WRITEUP: The instant `ITECHNO26{...}` is found, you MUST immediately write `C:\Users\Lenovo\PROJECT\ctf\writeups\<category>_<challenge-name>.md` following `PROJECT/ctf/writeups/TEMPLATE.md` with full solver script, recon log, and pivot history. Do not ask for user confirmation.
+  `[CANDIDATE FLAG QUEUE]`
+  `-> CANDIDATE #1: ITECHNO26{...} (Confidence: High | Source: strings/urls)`
+  `-> Rekomendasi: SUBMIT CANDIDATE #1 DULU. Balas 'valid' atau 'reject'.`
+  `Command: <kali-bash script / solver ready to run>`
+  `Fallback: <next vector if rejected>`
+- WRITEUP TUNDA: JANGAN menulis file writeup sebelum flag divalidasi user. Begitu user membalas `valid` atau `buat writeup`, barulah tulis file lengkap di `C:\Users\Lenovo\PROJECT\ctf\writeups\<category>_<challenge-name>.md` sesuai template.
