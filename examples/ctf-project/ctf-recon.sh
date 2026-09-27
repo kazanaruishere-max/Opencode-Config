@@ -54,19 +54,33 @@ grep -Erai "ITECHNO26\{|flag\{|FLAG\{" "$TARGET" 2>/dev/null | head -n 5 || echo
 
 FILE_TYPE=$(file "$TARGET" | tr '[:upper:]' '[:lower:]')
 
-# --- BINARY / ELF / PE / PWN / REVERSE ---
+# --- BINARY / ELF / PE / PWN / REVERSE (deep deterministic) ---
 if [[ "$FILE_TYPE" =~ (elf|executable|pe32|shared\ object) ]]; then
     echo -e "\n[+] Binary Detected -> Pwn / Reverse Analysis"
     if command -v checksec &>/dev/null; then
         echo "--- checksec ---"
         checksec --file="$TARGET" || true
     fi
+    echo "--- Go / Rust / UPX / .NET Fingerprint ---"
+    strings -a "$TARGET" 2>/dev/null | grep -E "go1\.|runtime\.pclntab|start_gopanic|\.gopclntab|rust_panic|\.rustc|UPX!|CLR Metadata|mscorlib" | head -n 10 || echo "[-] No Go/Rust/UPX/.NET marker"
+    readelf -S "$TARGET" 2>/dev/null | grep -E "gopclntab|rustc|upx" | head -n 5 || true
+    upx -t "$TARGET" 2>&1 | head -n 2 || true
     echo "--- Dynamic Libraries ---"
     ldd "$TARGET" 2>/dev/null || true
+    echo "--- Anti-Debug / VM Strings ---"
+    strings -n 6 "$TARGET" 2>/dev/null | grep -Ei "(ptrace|isDebugger|rdtsc|cpuid|anti.?debug|vmware|vbox)" | head -n 10 || echo "[-] No anti-debug marker"
     echo "--- Suspicious Strings / Symbols (top 15) ---"
     strings -n 8 "$TARGET" | grep -Ei "(system|sh|bin|flag|pass|admin|secret|debug|ptrace|fork|canary|tcache)" | head -n 15 || true
     echo "--- Entry Point / Architecture ---"
     readelf -h "$TARGET" 2>/dev/null | grep -Ei "(class|machine|entry)" || true
+fi
+# --- APK / DEX / iOS / RANSOMWARE HINTS (outside ELF block) ---
+if [[ "$TARGET" == *.apk ]] || file "$TARGET" 2>/dev/null | grep -qi "zip"; then
+    unzip -l "$TARGET" 2>/dev/null | grep -E "classes\.dex|AndroidManifest" | head -n 5 || true
+fi
+if file "$TARGET" 2>/dev/null | grep -qi "Mach-O\|iOS"; then
+    echo "--- iOS/Mach-O hint ---"
+    strings -n 6 "$TARGET" 2>/dev/null | grep -E "objc_msgSend|Frida" | head -n 5 || true
 fi
 
 # --- ARCHIVES / COMPRESSED FILES ---

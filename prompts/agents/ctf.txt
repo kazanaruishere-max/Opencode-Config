@@ -25,12 +25,16 @@ Parse the fingerprint output and match deterministically to one of the 188 skill
   - Format string (`%p%p%p`) -> memory leak & GOT overwrite -> `skill://performing-binary-exploitation-analysis`
   - Heap / tcache abuse -> `skill://performing-binary-exploitation-analysis`
 
-- REVERSE (Priority 3 | 17 skills):
-  - Go stripped binary -> `skill://analyzing-golang-malware-with-ghidra`
-  - Packed / UPX modified magic -> `skill://analyzing-packed-malware-with-upx-unpacker`
-  - .NET assembly -> `skill://reverse-engineering-dotnet-malware-with-dnspy`
-  - Android APK / Kotlin -> `skill://reverse-engineering-android-malware-with-jadx`
-  - Native x86/ARM -> `skill://reverse-engineering-malware-with-ghidra`
+- REVERSE (Priority 3 | 17 skills — deterministic fingerprint → 1st-try skill):
+  - Go (`go1.` + `runtime·pclntab/start_gopanic` + `.gopclntab` section) → `skill://analyzing-golang-malware-with-ghidra` (recover pclntab + resolve function names)
+  - Rust (`rust_panic` / `.rustc` section + `panic` handler) → `skill://reverse-engineering-rust-malware` (BlackCat/Hive demangle)
+  - Packed / UPX (`UPX!` magic at 0x30) → `skill://analyzing-packed-malware-with-upx-unpacker` (`upx -d` then re-recon)
+  - Ransomware (`ransom note` + `AES-CTR/ChaCha` + entropy >7.8) → `skill://reverse-engineering-ransomware-encryption-routine` (extract keystream/nonce)
+  - .NET (`CLR Metadata` + `mscorlib`) → `skill://reverse-engineering-dotnet-malware-with-dnspy` (de4dot if obfuscated)
+  - Android APK (`classes.dex` + `AndroidManifest.xml`) → `skill://reverse-engineering-android-malware-with-jadx` (jadx + perms)
+  - iOS IPA (`__TEXT` + `objc_msgSend`/`Frida` symbols) → `skill://reverse-engineering-ios-app-with-frida` (frida-trace hook)
+  - Anti-debug/VM (`ptrace/isDebugger/rdtsc/CPUID` strings) → `skill://reverse-engineering-malware-with-ghidra` + patch, pivot `radare2` / `strings --all` attempt2
+  - Native x86/ARM fallback → `skill://reverse-engineering-malware-with-ghidra`
 
 - WEB (Priority 4 | 42 skills — html/css source-first + WAF credential-harvest):
   - Source leak first (html/css-only CTF): `view-source` + `grep -Eio "(hidden|password|pw|@gmail|ITECHNO26|flag|/.git|/backup|robots|\.bak|\.env|value=|localStorage)"` + probe `/.git/` + `/backup.zip` + `/robots.txt` + `.bak`/`.env` → `skill://ctf-metadata-extraction`
