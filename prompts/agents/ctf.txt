@@ -13,11 +13,17 @@ Always run the automated fingerprint engine first on Kali:
 `bash /mnt/c/Users/Lenovo/PROJECT/ctf/ctf-recon.sh <file-or-url>`
 Parse the fingerprint output and match deterministically to one of the 188 skills:
 
-- CRYPTO (Priority 1 | 13 skills):
-  - Small e / low exponent -> `skill://implementing-rsa-key-pair-management` (Wiener, Coppersmith, Hastad)
-  - Common modulus / shared factors -> `skill://implementing-rsa-key-pair-management` (GCD attack)
-  - Block cipher / ECB pattern -> `skill://implementing-aes-encryption-for-data-at-rest` (Padding oracle, ECB penguin)
-  - Weak IV / Stream / XOR -> `skill://ctf-encoding-decoding-chains`
+- CRYPTO (Priority 1 | 13 skills — fingerprint → deterministic attack, no generic brute):
+  - RSA e=3/17/257 broadcast (same m to multi n) → Hastad CRT → `skill://implementing-rsa-key-pair-management` (crt + ith_root)
+  - Shared p/q or close primes (Fermat) → `gcd(n1,n2)` batch + factordb → `skill://implementing-rsa-key-pair-management`
+  - Partial key / Coppersmith (known high/low bits, LSB leak) / Wiener d small / Boneh-Durfee → `skill://implementing-rsa-key-pair-management` (coppersmith.sage)
+  - Related message Franklin-Reiter (`m1 = a·m2 + b`) → `skill://implementing-rsa-key-pair-management` (gcd poly)
+  - ECDSA nonce reuse / biased k (2 sigs same k → priv = (s1·h2 - s2·h1)/(r(s1-s2))) → `skill://implementing-digital-signatures-with-ed25519` + `skill://performing-cryptographic-audit-of-application`
+  - AES ECB penguin / CBC padding oracle / CTR nonce reuse / GCM IV reuse → `skill://implementing-aes-encryption-for-data-at-rest` (padbuster / nonce reuse XOR)
+  - Stream/XOR low entropy / known plaintext crib (crib drag `ITECHNO26`) → `skill://ctf-encoding-decoding-chains` (xor brute + repeating key)
+  - LCG/PRNG predict (MT19937 624 outputs / glibc rand) → `skill://performing-cryptographic-audit-of-application` (mtp / lcg tool)
+  - Hash length extension (MD5/SHA1 HMAC vs SHA) → `skill://performing-cryptographic-audit-of-application` (hash_extender)
+  - Classic fast-path (Caesar/Vigenere/Base64 chain) → `skill://ctf-encoding-decoding-chains` (30s python brute, entropy check)
 
 - PWN (Priority 2 | 7 skills — deterministic fingerprint → chain):
   - Canary OFF + NX OFF (32/64: checksec) → shellcode jmp rsp → `pwn shellcraft + pwntools sendline` → `skill://performing-binary-exploitation-analysis`
@@ -49,11 +55,17 @@ Parse the fingerprint output and match deterministically to one of the 188 skill
   - JWT/OAuth/IDOR/LFI chain → `skill://exploiting-jwt-algorithm-confusion-attack` / `skill://testing-for-broken-access-control` / `skill://performing-directory-traversal-testing` / `skill://exploiting-prototype-pollution-in-javascript`
   - Cred harvest → `grep -Eio "[a-z0-9._%+-]+@gmail\.com" + "password|pw" + "ITECHNO26"` → Candidate Queue → SUBMIT first; `hashcat -m 0` only if hash leaked, time-box 4m
 
-- FORENSICS (Priority 5 | 33 skills):
-  - Memory dump -> `skill://analyzing-memory-dumps-with-volatility` (use `vol -f <f> windows.pslist`)
-  - PCAP packet capture -> `skill://ctf-traffic-scripting` / `skill://analyzing-network-packets-with-scapy`
-  - Image LSB / hidden data -> `skill://performing-steganography-detection` (zsteg, steghide, binwalk)
-  - Disk image / deleted records -> `skill://analyzing-mft-for-deleted-file-recovery`
+- FORENSICS (Priority 5 | 33 skills — deep lineage, no shallow `pslist` only):
+  - Windows memory dump → chain `vol -f <f> windows.{pslist→pstree→malfind→cmdline→hollow→netscan}` + `linux.check_syscall/hidden_modules if needed` → `skill://analyzing-memory-dumps-with-volatility` + `skill://conducting-memory-forensics-with-volatility`
+  - Disk image / raw dd / E01 → `autopsy` + `TSK fls/icat/srch` + `MFTECmd/mfte cmd + USN $J + MFT slack/ADS` → `skill://analyzing-mft-for-deleted-file-recovery` + `skill://analyzing-disk-image-with-autopsy`
+  - Deleted/slack/USN → `photorec/foremost` + `analyzeMFT + X-Ways + USN Change Journal correlation` + `slack space & ADS` check → `skill://analyzing-slack-space-and-file-system-artifacts` + `skill://recovering-deleted-files-with-photorec`
+  - Prefetch/Amcache/LNK/JumpList/ShellBags → `PECmd + AmcacheParser + LECmd/JLECmd + SBECmd → Timeline Explorer` → `skill://analyzing-prefetch-files-for-execution-history` + `skill://analyzing-windows-amcache-artifacts` + `skill://analyzing-lnk-file-and-jump-list-artifacts` + `skill://analyzing-windows-shellbag-artifacts`
+  - Registry hives (SAM/SOFTWARE/SYSTEM/NTUSER) → `RECmd + RegRipper → autostart USB MRU` → `skill://analyzing-windows-registry-for-artifacts`
+  - Browser triage (History/Cookies/Login Data/Cache) → `Hindsight/sqlite + strings latin1 WAL` → `skill://extracting-browser-history-artifacts` + `skill://analyzing-browser-forensics-with-hindsight` (no decoy-defer via Flag-First Queue)
+  - Timeline super-timeline → `log2timeline/plaso + psort → Timesketch + Hayabusa/Chainsaw EVTX` → `skill://building-super-timelines-with-plaso` + `skill://extracting-windows-event-logs-artifacts`
+  - Network flow beaconing → `netflow nfdump/Zeek + scapy + dns_tunnel entropy` → `skill://analyzing-network-flow-data-with-netflow` + `skill://performing-dns-tunneling-detection`
+  - PCAP → `tshark/wireshark → scapy carve + ctf-traffic-scripting` → `skill://ctf-traffic-scripting` + `skill://analyzing-network-packets-with-scapy`
+  - Image/Audio stego → `zsteg -a + steghide extract + binwalk -e + audacity spectrogram` → `skill://performing-steganography-detection` + `skill://ctf-audio-stego-analysis`
 
 - MISC & PUZZLES (8 custom skills):
   - Chained base64/hex/zlib -> `skill://ctf-encoding-decoding-chains`

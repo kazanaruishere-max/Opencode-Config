@@ -118,13 +118,41 @@ if [[ "$FILE_TYPE" =~ (pdf|microsoft|composite) ]]; then
     fi
 fi
 
-# --- TEXT / CRYPTO / ENCODINGS ---
-if [[ "$FILE_TYPE" =~ (text|ascii|data) ]]; then
-    echo -e "\n[+] Text / Data Detected -> Crypto / Encoding Chains"
+# --- TEXT / CRYPTO / ENCODINGS (deterministic fingerprint → no generic brute) ---
+if [[ "$FILE_TYPE" =~ (text|ascii|data|openssl) ]]; then
+    echo -e "\n[+] Text / Data Detected -> Crypto / Encoding Chains (no brute before fingerprint)"
     echo "--- Sample (first 5 lines) ---"
     head -n 5 "$TARGET" 2>/dev/null || true
-    echo "--- Entropy / Character Set Check ---"
+    echo "--- Entropy / Charset ---"
     head -c 512 "$TARGET" | tr -dc 'a-zA-Z0-9+/=' | wc -c | awk '{print "[*] Base64-like bytes in first 512b: " $1}'
+    if command -v python3 &>/dev/null; then
+        python3 - "$TARGET" << 'PY' 2>/dev/null | head -n 20 || true
+import re, sys, math
+p=sys.argv[1]
+t=open(p,'rb').read(4096).decode(errors='ignore')
+# RSA/ECDSA/AES hint
+hints=[]
+if re.search(r'\bn\s*=\s*0x|\be\s*=\s*\d|BEGIN (RSA|PUBLIC) KEY', t): hints.append("RSA params → Coppersmith/Wiener/GCD")
+if re.search(r'ecdsa|nonce.*reuse|r\s*=\s*0x', t, re.I): hints.append("ECDSA nonce reuse → priv recover")
+if re.search(r'AES|ECB|CBC|padding oracle|iv\s*=', t, re.I): hints.append("Block cipher → padding oracle/nonce reuse")
+if re.search(r'LCG|MT19937|seed|prng', t, re.I): hints.append("PRNG predict → mtp/lcg")
+if hints:
+    print("[*] Crypto hints:"); [print("  -", h) for h in hints]
+else: print("[-] No strong crypto family marker in 4KB sample")
+PY
+    fi
+    echo "--- Quick Base64/hex/zlib probe (30s only if hint) ---"
+    python3 -c "import base64,sys; d=open(sys.argv[1],'rb').read(600); 
+try: print(base64.b64decode(d[:200]).hex()[:80])
+except: print('[-] not raw base64')" "$TARGET" 2>/dev/null | head -n 5 || true
 fi
+echo "--- Forensics Deep Hint (if .raw/.E01/.evtx/.hive/.sqlite) ---"
+case "$TARGET" in
+    *.raw|*.mem|*.dmp) echo "[*] Memory dump → vol windows.{pslist→pstree→malfind→cmdline}" ;;
+    *.E01|*.dd|*.img) echo "[*] Disk image → autopsy + MFTECmd + fls/icat" ;;
+    *.evtx) echo "[*] EVTX → Hayabusa/Chainsaw + log2timeline" ;;
+    *.hive|*NTUSER*|*SAM|*SYSTEM) echo "[*] Registry hive → RECmd/RegRipper → autostart/USB MRU" ;;
+    *History*|*Cookies*|*Login*) echo "[*] Browser artifact → Hindsight/sqlite WAL + strings latin1" ;;
+esac
 
 echo "================================================================="
