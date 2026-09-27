@@ -218,14 +218,15 @@ Aturan:
 
 Workflow CTF kompetitif (Time-Attack 5 Jam | Target: `ITECHNO26{...}`):
 ```
-CTF Soal (Web/PDF) → opencode (Triage 60s → Recon 30s → Auto-Skill → Kali Command) → Flag → Auto-Writeup
+CTF Soal (Web/PDF) → opencode (Triage 60s → Recon 30s Auto-Script → Auto-Skill → Kali Command) → Flag → Auto-Writeup
 ```
 Aturan Taktik & Kecepatan:
 - Triage ROI: prioritize `points / est_minutes`. Clear 100-200p dulu.
-- Time-box per soal: Easy max 4m | Medium max 10m | Hard max 20m. Gagal 2 attempt → skip/eskalasi `researcher` → pivot soal lain.
-- Auto-Writeup WAJIB: Setiap flag `ITECHNO26{...}` didapatkan, agent WAJIB otomatis menulis file `PROJECT/ctf/writeups/<category>_<soal>.md` tanpa menunggu instruksi user.
-- Sesi maraton: jalankan `headroom compress` tiap 10 challenge untuk evict residual context.
-- Skill dipanggil on-demand via `skill://<nama>` berdasarkan recon fingerprint; dilarang generate payload sebelum recon mapping.
+- Priority Order: Crypto > Pwn > Reverse > Web > Forensics > Misc > OSINT > AI.
+- Auto-Recon WAJIB: Jalankan `ctf-recon.sh` pada target sebelum merancang payload; dilarang generate exploit tanpa fingerprint recon.
+- Time-box per soal: Easy max 4m | Medium max 10m | Hard max 20m. Gagal 2 attempt → ganti vektor pivot; jika batas waktu habis → eskalasi `researcher` → pivot soal lain.
+- Auto-Writeup WAJIB: Setiap flag `ITECHNO26{...}` didapatkan, agent WAJIB otomatis menulis file `PROJECT/ctf/writeups/<category>_<soal>.md` lengkap dengan Pivot Log dan script solver.
+- Stamina & Context: Jalankan `headroom compress` tiap 10 challenge untuk evict residual context. Jam ke 3-5 fokus validasi flag hygiene (`echo ITECHNO26{} | tee -a submit.log`).
 
 Ringkasan: Cryptography 13, Web 42, Reverse 17, Forensics 33, PWN 7, OSINT 22, Network 12, Miscellaneous (CTF) 8, AI 14, AD/PrivEsc 10, Exploit FW 3, Other/Unclassified 7 = 188.
 Full catalog + deskripsi + workflow per kategori: `docs/cybersecurity-catalog.md` (on-demand). Alternatif cepat: `ls ~/.agents/skills/cybersecurity/`.

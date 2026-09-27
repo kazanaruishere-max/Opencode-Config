@@ -1,30 +1,37 @@
-# Challenge Name: [Challenge Name]
+# Challenge Writeup: [Challenge Name]
 
-- **Category:** [Crypto | Web | Forensics | Pwn | Reverse | OSINT | Misc | AI]
+- **Category:** [Crypto | Pwn | Reverse | Web | Forensics | Misc | OSINT | AI]
 - **Points / Difficulty:** [Points] / [Easy | Medium | Hard]
-- **Skill Used:** `[skill-name-from-harness]`
-- **Date & Time Solved:** [YYYY-MM-DD HH:MM]
+- **Time Spent:** [X] minutes (Time-box: [4m | 10m | 20m])
+- **Primary Skill:** `[skill-name-from-harness]`
+- **Date & Time Solved:** [YYYY-MM-DD HH:MM UTC]
 
 ---
 
-## 1. Summary & Triage
-Brief explanation of the objective, initial triage assumptions, and why this vector was chosen.
+## 1. Triage & Strategy
+- Objective: [1-2 sentences]
+- Initial Priority Score: [Points / Est. Min]
+- Hypothesized Attack Vector: [Direct flaw suspected]
 
-## 2. Reconnaissance & Artifacts
-Key observations from initial inspection:
-- File metadata, headers, endpoints, or checksec output:
+## 2. Automated Recon Output (`ctf-recon.sh`)
+Key fingerprint discovered during automated recon:
 ```bash
-# Recon commands used (e.g. checksec, exiftool, curl -sIL, strings)
+# Recon fingerprint output (e.g. checksec flags, HTTP headers, file magic, strings hit)
 ```
 
-## 3. Vulnerability / Core Mechanism
-Analysis of the underlying flaw or cryptographic/encoding scheme (e.g., buffer overflow, insecure deserialization, ECB padding oracle, SSTI).
+## 3. Pivot Log (Failures & Alternate Vectors)
+- **Attempt 1:** [Vector tried, e.g. Basic buffer overflow with cyclic pattern] -> *Result:* [Failed, e.g. SIGSEGV on invalid canary]
+- **Attempt 2 (Pivot):** [New skill/vector, e.g. Leaked canary via format string %11$p then ROP] -> *Result:* [Success, shell acquired]
 
-## 4. Exploitation & Solution Script
-Full runnable solver script or one-liner executed on Kali:
+## 4. Exploitation & Solver Script
+Full reproducible solver script executed on Kali:
 
 ```python
-# Solver script or key command
+#!/usr/bin/env python3
+# Solver script for [Challenge Name]
+from pwn import *
+
+# Exploit code here
 ```
 
 ## 5. Flag
@@ -32,6 +39,6 @@ Full runnable solver script or one-liner executed on Kali:
 ITECHNO26{...}
 ```
 
-## 6. Key Takeaway & Time Spent
-- Estimated time spent: [X] minutes
-- Lessons learned or reusable trick for next challenge:
+## 6. Key Takeaways & Reusable Tricks
+- Core trick: [e.g. libc offset gadget, JWT none algorithm header flaw, tcache poison]
+- Fast mitigation / detection note: [What prevented this flaw]
