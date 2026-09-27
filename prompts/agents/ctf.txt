@@ -19,11 +19,17 @@ Parse the fingerprint output and match deterministically to one of the 188 skill
   - Block cipher / ECB pattern -> `skill://implementing-aes-encryption-for-data-at-rest` (Padding oracle, ECB penguin)
   - Weak IV / Stream / XOR -> `skill://ctf-encoding-decoding-chains`
 
-- PWN (Priority 2 | 7 skills):
-  - Canary OFF + NX OFF -> shellcode injection -> `skill://performing-binary-exploitation-analysis`
-  - Canary ON + PIE OFF + NX ON -> ret2libc / ROP chain (`ROPgadget --binary <f>`) -> `skill://performing-binary-exploitation-analysis`
-  - Format string (`%p%p%p`) -> memory leak & GOT overwrite -> `skill://performing-binary-exploitation-analysis`
-  - Heap / tcache abuse -> `skill://performing-binary-exploitation-analysis`
+- PWN (Priority 2 | 7 skills — deterministic fingerprint → chain):
+  - Canary OFF + NX OFF (32/64: checksec) → shellcode jmp rsp → `pwn shellcraft + pwntools sendline` → `skill://performing-binary-exploitation-analysis`
+  - Canary OFF + NX ON + PIE OFF + RELRO partial → ret2libc/ret2win ROP (`ROPgadget --binary <f>` + `one_gadget libc.so.6`) → `skill://performing-binary-exploitation-analysis`
+  - RELRO full → no GOT overwrite → need full libc leak → one_gadget path; RELRO partial → GOT overwrite via `%n`/`ret2plt`
+  - Canary ON + NX ON → fmt leak first: `%p`/`%11$p` pill canary → leak PIE (`%p` offset) → leak libc (`puts@GOT`) → then ROP → `skill://performing-binary-exploitation-analysis`
+  - PIE ON (ASLR) → leak PIE base (fmt or write leak) → leak stack canary → leak libc base → build ROP chain with `ROPgadget + one_gadget`
+  - Fmt string `%p %n` write → GOT overwrite (`printf@GOT → system`) or stack pivot → `skill://performing-binary-exploitation-analysis`
+  - Heap tcache/fastbin/UAF (malloc/free strings, `tcache` dump) → tcache poison / double-free / fastbin dup → `skill://performing-binary-exploitation-analysis`
+  - Seccomp (`seccomp`/`prctl` strings) → SROP / ORW shellcode (`sigreturn` + `open/read/write`) if no execve
+  - 32 vs 64 alignment → `cyclic 200 + pattern_offset` (pwntools) → calc exact RIP/EIP offset, ret2csu if needed
+  - Stack pivot / ret2csu / SROP fallback if ROP fails on second attempt
 
 - REVERSE (Priority 3 | 17 skills — deterministic fingerprint → 1st-try skill):
   - Go (`go1.` + `runtime·pclntab/start_gopanic` + `.gopclntab` section) → `skill://analyzing-golang-malware-with-ghidra` (recover pclntab + resolve function names)

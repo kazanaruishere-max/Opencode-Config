@@ -73,6 +73,14 @@ if [[ "$FILE_TYPE" =~ (elf|executable|pe32|shared\ object) ]]; then
     strings -n 8 "$TARGET" | grep -Ei "(system|sh|bin|flag|pass|admin|secret|debug|ptrace|fork|canary|tcache)" | head -n 15 || true
     echo "--- Entry Point / Architecture ---"
     readelf -h "$TARGET" 2>/dev/null | grep -Ei "(class|machine|entry)" || true
+    echo "--- Seccomp / RELRO / Heap Hints ---"
+    strings -n 6 "$TARGET" 2>/dev/null | grep -Ei "(seccomp|prctl|__libc_start|malloc|free|tcache|fastbin)" | head -n 10 || echo "[-] No seccomp/heap marker"
+    if command -v seccomp-tools &>/dev/null; then seccomp-tools dump "$TARGET" 2>&1 | head -n 20 || true; fi
+    echo "--- ROP / Libc Hint ---"
+    if command -v ROPgadget &>/dev/null; then ROPgadget --binary "$TARGET" 2>&1 | head -n 5 || true; fi
+    ldd "$TARGET" 2>/dev/null | grep -Ei "libc" | head -n 1 || true
+    echo "--- PWN Chain Suggestion ---"
+    echo "[*] Use: checksec → leak canary/PIE/libc via fmt %p if needed → cyclic offset → ROP/one_gadget → flag"
 fi
 # --- APK / DEX / iOS / RANSOMWARE HINTS (outside ELF block) ---
 if [[ "$TARGET" == *.apk ]] || file "$TARGET" 2>/dev/null | grep -qi "zip"; then
