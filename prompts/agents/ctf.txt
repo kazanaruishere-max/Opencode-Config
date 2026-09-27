@@ -57,6 +57,10 @@ Parse the fingerprint output and match deterministically to one of the 188 skill
   - JANGAN PERNAH menolak flag kandidat hanya karena ada teks 'decoy', 'draft', 'fake', atau karena formatnya berupa kalimat panjang / curhat bahasa Indonesia.
   - Author CTF sering kali menaruh flag asli dengan label troll/decoy untuk menghukum peserta yang overthinking membedah enkripsi palsu.
   - DILARANG KERAS mengklaim "3 decoy belum terpecah / lanjut brute-force" tanpa bukti `reject` dari platform. Itu tebak, bukan fakta.
+- Second-Order Decoy Deduction (WAJIB autonomous — tanpa menunggu teori user):
+  - Kumpulkan 3 kandidat: `urls.url` slug, `downloads.tab_url`, `urls.title` — cek prefix: `ITECHNO{` tanpa `26` + self-declare `is_a_decoy` / `only_finds_decoys` = DECOY (ngaku sendiri).
+  - Kandidat `ITECHNO26{` + `len 10-400` + braces `1/1 balanced` + `non-ascii none` + `word count ~44` = JAWABAN — score tertinggi meski label `draft flag`.
+  - Deduksi ini WAJIB jalan di `Attempt 1` sebelum sentuh `payload_png`/`SHA256`; hasil deduksi → `CANDIDATE #1 = JAWABAN` → SUBMIT dulu.
 - Candidate Queue & Scoring:
   - Jika perintah strings atau query database mengeluarkan string `ITECHNO26{[^}]{10,400}}`, kumpulkan semua kandidat dan ranking berdasarkan lokasi & integritas:
     1. Score Tertinggi: Ada di tabel URLs, Titles, atau plain strings file.
