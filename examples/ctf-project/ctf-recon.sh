@@ -146,6 +146,11 @@ PY
 try: print(base64.b64decode(d[:200]).hex()[:80])
 except: print('[-] not raw base64')" "$TARGET" 2>/dev/null | head -n 5 || true
 fi
+echo "--- MISC Chain Entropy Probe ---"
+if file "$TARGET" 2>/dev/null | grep -Eq "text|ASCII|data"; then
+    ent=$(python3 -c "import collections,math; d=open('$TARGET','rb').read(2048); c=collections.Counter(d); print(sum(-v/len(d)*math.log2(v/len(d)) for v in c.values()) if d else 0)" 2>/dev/null || echo "0")
+    echo "[*] Entropy (2048b): $ent — >7.5 likely encoded/encrypted → try ctf-encoding-decoding-chains"
+fi
 echo "--- Forensics Deep Hint (if .raw/.E01/.evtx/.hive/.sqlite) ---"
 case "$TARGET" in
     *.raw|*.mem|*.dmp) echo "[*] Memory dump → vol windows.{pslist→pstree→malfind→cmdline}" ;;
@@ -154,5 +159,9 @@ case "$TARGET" in
     *.hive|*NTUSER*|*SAM|*SYSTEM) echo "[*] Registry hive → RECmd/RegRipper → autostart/USB MRU" ;;
     *History*|*Cookies*|*Login*) echo "[*] Browser artifact → Hindsight/sqlite WAL + strings latin1" ;;
 esac
+echo "--- OSINT Hint (if domain/email/username artifact) ---"
+if echo "$TARGET" | grep -Eq "@|[a-z0-9.-]+\.[a-z]{2,}$"; then echo "[*] OSINT artefact → dnstwist/subfinder/theHarvester + Shodan (4m time-box)"; fi
+echo "--- AI Prompt/Model Hint (if prompt/system file) ---"
+if grep -Eqi "system prompt|ignore previous|jailbreak|llm|vector store|FAISS|Chroma" "$TARGET" 2>/dev/null; then echo "[*] AI prompt/model file → prompt-injection/garak/PyRIT (4m time-box)"; fi
 
 echo "================================================================="
