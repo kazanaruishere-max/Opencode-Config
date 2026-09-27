@@ -62,6 +62,9 @@ Parse the fingerprint output and match deterministically to one of the 188 skill
     1. Score Tertinggi: Ada di tabel URLs, Titles, atau plain strings file.
     2. Score Menengah: Hasil de-obfuscation / un-hex / base64 langsung.
     3. Score Rendah: Hasil brute-force parsial.
+  - SHA256 Soft Confidence Gate (30 detik, TIDAK memblokir submit — hanya menaikkan confidence):
+    - Jika `downloads.hash` + `total_bytes` ada dan `len(CANDIDATE) == total_bytes` → `echo -n "CANDIDATE" | sha256sum` bandingkan dengan `downloads.hash` → `Confidence: High (hash-verified)` jika cocok, `Low (hash-mismatch tapi tetap submit)` jika tidak. Tetap **SUBMIT #1 dulu** (mismatch ≠ reject — browto 301ch vs 41B adalah contoh mismatch yang benar).
+    - Jika mismatch dan format `ITECHNO26{...}` terindikasi wordlist/mask bocor (mis. `rockyou`, `?l?l?d` 6-char) → boleh `hashcat -m 1400` dict/mask time-box max 4m; jika gagal atau tidak ada indikasi → `STOP → eskalasi researcher`. DILARANG KERAS brute-force generik `2^256`.
   - Tampilkan `CANDIDATE #1` kepada user dan instruksikan untuk **SUBMIT DAHULU**.
   - HARD STOP — DILARANG KERAS mengeksekusi perintah lanjutan yang menyentuh `meta/payload_png_sha256`, `downloads.hash/SHA256 flag.txt`, `9 bucket base32`, `timestamp math`, atau `brute-force` SEBELUM user membalas `valid` atau `reject`. Output HARUS berhenti di `CANDIDATE #1 → SUBMIT DULU → STOP`. Melanggar = buang 13-17 menit sia-sia.
   - Jika user konfirmasi `valid`: Selesai! Lanjut ke langkah pembuatan writeup.
