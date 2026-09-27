@@ -32,11 +32,12 @@ Parse the fingerprint output and match deterministically to one of the 188 skill
   - Android APK / Kotlin -> `skill://reverse-engineering-android-malware-with-jadx`
   - Native x86/ARM -> `skill://reverse-engineering-malware-with-ghidra`
 
-- WEB (Priority 4 | 42 skills):
-  - JWT token in auth -> `skill://exploiting-jwt-algorithm-confusion-attack` / `skill://performing-jwt-none-algorithm-attack`
-  - URL parameter reflection -> `skill://exploiting-sql-injection-vulnerabilities` / `skill://performing-ssrf-vulnerability-exploitation`
-  - Object binding -> `skill://exploiting-mass-assignment-in-rest-apis`
-  - Prototype / JS logic -> `skill://exploiting-prototype-pollution-in-javascript`
+- WEB (Priority 4 | 42 skills — html/css source-first + WAF credential-harvest):
+  - Source leak first (html/css-only CTF): `view-source` + `grep -Eio "(hidden|password|pw|@gmail|ITECHNO26|flag|/.git|/backup|robots|\.bak|\.env|value=|localStorage)"` + probe `/.git/` + `/backup.zip` + `/robots.txt` + `.bak`/`.env` → `skill://ctf-metadata-extraction`
+  - Auth bypass WAF-aware: `SQLi (' OR 1=1--` with `/**/` double-encode `%00`) → `skill://exploiting-sql-injection-vulnerabilities` (`--tamper=space2comment,randomcase,between` if 403), `NoSQL (' || 1==1)` → `skill://exploiting-nosql-injection-vulnerabilities`
+  - WAF 403 → immediate pivot to `skill://performing-web-application-firewall-bypass` (encode/tamper/parameter-pollution) before retrying same payload
+  - JWT/OAuth/IDOR/LFI chain → `skill://exploiting-jwt-algorithm-confusion-attack` / `skill://testing-for-broken-access-control` / `skill://performing-directory-traversal-testing` / `skill://exploiting-prototype-pollution-in-javascript`
+  - Cred harvest → `grep -Eio "[a-z0-9._%+-]+@gmail\.com" + "password|pw" + "ITECHNO26"` → Candidate Queue → SUBMIT first; `hashcat -m 0` only if hash leaked, time-box 4m
 
 - FORENSICS (Priority 5 | 33 skills):
   - Memory dump -> `skill://analyzing-memory-dumps-with-volatility` (use `vol -f <f> windows.pslist`)

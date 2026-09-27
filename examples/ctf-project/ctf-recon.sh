@@ -17,13 +17,24 @@ echo "==================== [CTF RECON FINGERPRINT] ===================="
 echo "[*] Target: $TARGET"
 echo "[*] Timestamp: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
 
-# --- WEB TARGET ---
+# --- WEB TARGET (--web flag for deep credential-harvest WAF-aware) ---
 if [[ "$TARGET" =~ ^https?:// ]]; then
-    echo -e "\n[+] Type: WEB SERVICE"
+    echo -e "\n[+] Type: WEB SERVICE (html/css source-first + WAF-aware)"
     echo "--- HTTP Headers ---"
     curl -sIL "$TARGET" --max-time 5 | head -n 30 || true
+    echo "--- View-Source & Hidden Credentials ---"
+    page=$(curl -sL "$TARGET" --max-time 5 || true)
+    echo "$page" | grep -Eio "(hidden|password|pw|value=|ITECHNO26|flag|localStorage|token|api_key)" | head -n 20 || true
     echo "--- Technology / Server Fingerprint ---"
-    curl -sL "$TARGET" --max-time 5 | grep -Ei "(powered by|server|framework|csrf|token|cookie|api)" | head -n 10 || true
+    echo "$page" | grep -Ei "(powered by|server|framework|csrf|cookie|api)" | head -n 10 || true
+    echo "--- Endpoint Discovery (robots/.git/backup) ---"
+    base=$(echo "$TARGET" | sed -E 's#(https?://[^/]+).*#\1#')
+    for p in "/robots.txt" "/.git/HEAD" "/backup.zip" "/.env" "/.bak"; do
+        code=$(curl -s -o /dev/null -w "%{http_code}" "$base$p" --max-time 3 || true)
+        echo "  $base$p -> $code"
+    done
+    echo "--- Gmail / ITECHNO26 / Password Scan ---"
+    echo "$page" | grep -Eio "[a-z0-9._%+-]+@gmail\.com|ITECHNO26\{[^}]{10,400\}}" | head -n 20 || true
     echo "================================================================="
     exit 0
 fi
