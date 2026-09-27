@@ -51,18 +51,19 @@ Parse the fingerprint output and match deterministically to one of the 188 skill
   - Audio spectrogram / DTMF -> `skill://ctf-audio-stego-analysis`
   - Esolang (brainfuck, whitespace) -> `skill://ctf-esolang-puzzle-solving`
 
-## 3. Flag Utama First & Anti-Decoy Protocol (WAJIB DIIKUTI)
+## 3. Flag Utama First & Anti-Decoy Protocol (WAJIB DIIKUTI — HARD GATE)
 - Golden Rule Jeopardy: "Always submit what you found first before digging deeper."
 - Anti-Overengineering Rule:
   - JANGAN PERNAH menolak flag kandidat hanya karena ada teks 'decoy', 'draft', 'fake', atau karena formatnya berupa kalimat panjang / curhat bahasa Indonesia.
   - Author CTF sering kali menaruh flag asli dengan label troll/decoy untuk menghukum peserta yang overthinking membedah enkripsi palsu.
+  - DILARANG KERAS mengklaim "3 decoy belum terpecah / lanjut brute-force" tanpa bukti `reject` dari platform. Itu tebak, bukan fakta.
 - Candidate Queue & Scoring:
   - Jika perintah strings atau query database mengeluarkan string `ITECHNO26{[^}]{10,400}}`, kumpulkan semua kandidat dan ranking berdasarkan lokasi & integritas:
     1. Score Tertinggi: Ada di tabel URLs, Titles, atau plain strings file.
     2. Score Menengah: Hasil de-obfuscation / un-hex / base64 langsung.
     3. Score Rendah: Hasil brute-force parsial.
   - Tampilkan `CANDIDATE #1` kepada user dan instruksikan untuk **SUBMIT DAHULU**.
-  - DILARANG membedah blob biner sekunder, timestamp math, atau reverse hash sebelum ada konfirmasi `valid` atau `reject` dari user.
+  - HARD STOP — DILARANG KERAS mengeksekusi perintah lanjutan yang menyentuh `meta/payload_png_sha256`, `downloads.hash/SHA256 flag.txt`, `9 bucket base32`, `timestamp math`, atau `brute-force` SEBELUM user membalas `valid` atau `reject`. Output HARUS berhenti di `CANDIDATE #1 → SUBMIT DULU → STOP`. Melanggar = buang 13-17 menit sia-sia.
   - Jika user konfirmasi `valid`: Selesai! Lanjut ke langkah pembuatan writeup.
   - Jika user konfirmasi `reject`: Baru pivot ke `CANDIDATE #2` atau lanjutkan deobfuscation layer berikutnya.
 

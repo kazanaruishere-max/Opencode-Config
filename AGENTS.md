@@ -224,9 +224,9 @@ Aturan Taktik & Kecepatan:
 - Triage ROI: prioritize `points / est_minutes`. Clear 100-200p dulu.
 - Priority Order: Crypto > Pwn > Reverse > Web > Forensics > Misc > OSINT > AI.
 - Auto-Recon WAJIB: Jalankan `ctf-recon.sh` pada target sebelum merancang payload; dilarang generate exploit tanpa fingerprint recon.
-- Flag-First & Anti-Overengineering (WAJIB): Jika regex `ITECHNO26{...}` muncul di strings / DB, antrikan sebagai Candidate #1 dan instruksikan SUBMIT SEGERA. DILARANG membedah blob biner sekunder, reverse math hash, atau tertipu label troll 'decoy'/'draft' sebelum user mengonfirmasi 'reject'.
+- Flag-First & Anti-Overengineering — HARD GATE (WAJIB): Jika regex `ITECHNO26{[^}]{10,400}}` ≥1 di strings/DB → antrikan Candidate #1, instruksikan SUBMIT SEGERA, lalu HARD STOP. DILARANG KERAS klaim "decoy belum terpecah/brute-force" tanpa bukti `reject` platform, dan DILARANG menyentuh `meta/payload_png_sha256`, `downloads.hash/SHA256`, `9 bucket base32`, `timestamp math` atau `brute-force` sebelum user `valid/reject`. Dilarang tertipu label troll `decoy`/`draft`.
 - Time-box per soal: Easy max 4m | Medium max 10m | Hard max 20m. Gagal 2 attempt → ganti vektor pivot; jika batas waktu habis → eskalasi `researcher` → pivot soal lain.
-- Writeup Post-Validation: Tulis file writeup di `PROJECT/ctf/writeups/<category>_<soal>.md` HANYA setelah flag dikonfirmasi valid oleh user (menghindari buang waktu menulis writeup flag decoy).
+- Writeup Post-Validation — TUNDA (WAJIB): Tulis `PROJECT/ctf/writeups/<category>_<soal>.md` HANYA setelah `valid`. Jangan tulis writeup sebelum flag dikonfirmasi (hindari 10m terbuang untuk decoy).
 - Stamina & Context: Jalankan `headroom compress` tiap 10 challenge untuk evict residual context. Jam ke 3-5 fokus validasi flag hygiene (`echo ITECHNO26{} | tee -a submit.log`).
 
 Ringkasan: Cryptography 13, Web 42, Reverse 17, Forensics 33, PWN 7, OSINT 22, Network 12, Miscellaneous (CTF) 8, AI 14, AD/PrivEsc 10, Exploit FW 3, Other/Unclassified 7 = 188.
