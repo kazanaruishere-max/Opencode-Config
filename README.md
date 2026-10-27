@@ -5,16 +5,16 @@ Backup & restore kit untuk setup [opencode](https://opencode.ai) saya — charte
 ## Struktur
 
 ```
-├── opencode.json                 # config inti (tanpa mcp/provider) — 5 mode warna, 33 agents
-├── AGENTS.md                     # Expert Operating Charter + Blok Accountability (WAJIB, 188 lines)
+├── opencode.json                 # config inti (tanpa mcp/provider) — 4 mode warna, 32 agents
+├── AGENTS.md                     # Expert Operating Charter + Blok Accountability (WAJIB, 218 lines)
 ├── instructions/                 # always-on (INSTRUCTIONS, BROWSER-TOOLS, PUTERJS, NO-SLOP — anti-detection + code-quality)
 ├── commands/                     # slash commands (/plan, /tdd, /verify, /code-review, /security, ...)
-├── prompts/agents/               # prompt template per-agent (planner, code-reviewer, ctf, pentest, researcher, ...)
+├── prompts/agents/               # prompt template per-agent (planner, code-reviewer, pentest, researcher, ...)
 ├── agents/                       # ~232 subagent definition project-level (.md, community pack)
 ├── skills/                       # skill kurasi (tdd-workflow, security-review, graphify, no-ai-slop, ...)
-├── skills-custom/ctf/            # 8 skill CTF Miscellaneous custom (MIT) — taruh ke folder cybersecurity pack
+├── skills-custom/ctf/            # [arsip] 8 skill CTF Miscellaneous custom (MIT) — restore: docs/ctf-mode-restore.md
 ├── wsl/                          # wrapper WSL Kali: kali-bash.cmd + kali-bash.ps1
-├── examples/ctf-project/         # opencode.json shell override (otak Windows → tangan Kali)
+├── examples/ctf-project/         # [arsip] opencode.json shell override (otak Windows → tangan Kali)
 └── docs/
     ├── cybersecurity-catalog.md  # katalog 188 skill + workflow 8 kategori (on-demand)
     └── setup-wsl-kali.md         # installer WSL Kali native (manusia & agent)
@@ -29,17 +29,18 @@ Backup & restore kit untuk setup [opencode](https://opencode.ai) saya — charte
    git clone https://github.com/mukul975/Anthropic-Cybersecurity-Skills ~/.agents/skills/cybersecurity
    ```
    lalu copy isi `skills-custom/ctf/` ke dalamnya.
-4. Restart opencode → tekan `@` untuk ganti mode (build/plan/**ctf**/**pentest**/**researcher**) — warna Tab membedakan; atau langsung `opencode --agent ctf`. Cek `opencode mcp list` dan `/models`.
+4. Restart opencode → tekan `@` untuk ganti mode (build/plan/pentest/researcher) — warna Tab membedakan. Cek `opencode mcp list` dan `/models`. Mode `ctf` sudah **dicabut dari config aktif** (hemat token); pulihkan via **[docs/ctf-mode-restore.md](docs/ctf-mode-restore.md)**.
 
-### Mode 5-Way (warna Tab)
+### Mode 4-Way (warna Tab)
 
 | Mode | Warna | Model | Use |
 |---|---|---|---|
 | `plan` | #AF52DE ungu | `9router/fastcode` | Arsitektur & planning |
 | `build` | #34C759 hijau | `9router/deepreasoning` | Dev harian (default) |
-| `ctf` | #FF3B30 merah | `9router/deepreasoning` | Flag hunter 8 kategori |
 | `pentest` | #FF9500 oranye | `9router/deepreasoning` | Recon→Report (scoped) |
 | `researcher` | #5AC8FA biru | `9router/deepreasoning` | Analisis read-only |
+
+> `ctf` (#FF3B30) — arsip, tidak dimuat ke context. Snapshot: tag `ctf-mode-v1`.
 
 ### WSL Kali Native (otak Windows → tangan Kali)
 
